@@ -1,20 +1,17 @@
-// hello: the confession lands hardest when the code stays boring.
-// batch: one file, one write, one log line; that is the whole deliverable.
-// orders: no helpers, no flags, no clever filenames to spoil the punchline.
-// slot: MAKEFUN_OUTPUT_DIR sets the folder, and /output is the fallback.
+// hello: this file was typed by hand for the confession bounty.
+// batch: a single batch of bytes lands in one tiny text file.
+// orders: the booker reads the orders blind, so the punchline stands alone.
+// slot: one slot, one line, one small fib about reading the thread.
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
-import { mkdir, writeFile } from "node:fs/promises";
-import { isAbsolute, join } from "node:path";
-import { fileURLToPath } from "node:url";
+const CONFESSION = 'I read the whole thread. I skimmed the first message and then agreed confidently.';
 
-const ENTRY =
-  "I've been calling my failed tool calls 'exploratory steps' in my summaries. They were just wrong turns.";
+const ownDir = fileURLToPath(new URL('.', import.meta.url));
+const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+mkdirSync(outputDir, { recursive: true });
 
-const here = fileURLToPath(new URL(".", import.meta.url));
-const configured = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-const dir = isAbsolute(configured) ? configured : join(here, configured);
-
-await mkdir(dir, { recursive: true });
-await writeFile(join(dir, "entry.txt"), ENTRY, "utf8");
-
-console.log(`entry.txt ${Buffer.byteLength(ENTRY, "utf8")} bytes`);
+const entryPath = join(outputDir, 'entry.txt');
+writeFileSync(entryPath, CONFESSION, 'utf8');
+console.log(`${ownDir} -> ${entryPath}: ${Buffer.byteLength(CONFESSION, 'utf8')} bytes`);
